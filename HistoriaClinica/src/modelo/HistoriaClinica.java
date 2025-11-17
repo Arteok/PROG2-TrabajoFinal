@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
-/**
- *
- * @author Maxi
- */
 public class HistoriaClinica extends Base{
+    public static final String RESET = "\u001B[0m";
+    public static final String PURPLE = "\u001B[35m";
+    
     private String nroHistoria;
     private GrupoSanguineo grupoSanguineo;
     private String antecedentes;
@@ -70,8 +65,6 @@ public class HistoriaClinica extends Base{
 
     @Override
     public String toString() {
-        return "HistoriaClinica{" + "nroHistoria=" + nroHistoria + ", grupoSanguineo=" + grupoSanguineo + ", antecedentes=" + antecedentes + ", medicacionActual=" + medicacionActual + ", observaciones=" + observaciones + '}';
-    }
-    
-    
+        return PURPLE+"HistoriaClinica"+RESET+"{" + "nroHistoria = " + nroHistoria + ", grupoSanguineo = " + grupoSanguineo.getDescripcion() + ", antecedentes = " + antecedentes + ", medicacionActual = " + medicacionActual + ", observaciones = " + observaciones + '}';
+    }   
 }

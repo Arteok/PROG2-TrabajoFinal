@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,17 +6,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import config.DatabaseConnection;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.GrupoSanguineo;
 import modelo.HistoriaClinica;
 import modelo.Paciente;
 
-/**
- *
- * @author Maxi
- */
 public class PacienteDao implements GenericDao<Paciente>{
 
     @Override
@@ -116,6 +107,35 @@ public class PacienteDao implements GenericDao<Paciente>{
             throw new Exception("Error al obtener paciente por ID: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public Paciente getByIdEliminado(int id) throws Exception {
+        String sql = "SELECT * FROM pacientes WHERE ID_Paciente = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Paciente p = new Paciente();
+                p.setId(rs.getInt("ID_Paciente"));
+                p.setNombre(rs.getString("nombre"));
+                p.setApellido(rs.getString("apellido"));
+                p.setDni(rs.getString("dni"));
+                p.setFechaNacimiento(rs.getDate("FechaNacimiento").toLocalDate());
+                p.setHistoriaClinica(null);
+                p.setEliminado(rs.getBoolean("eliminado"));
+                return p;
+            }
+
+            return null;
+
+        } catch (SQLException e) {
+            throw new Exception("Error al obtener paciente eliminado por ID: " + e.getMessage(), e);
+        }
+    }
     
     public Paciente getByDni(String dni) throws Exception {
         String sql = """
@@ -135,7 +155,7 @@ public class PacienteDao implements GenericDao<Paciente>{
             if (rs.next()) {
                 HistoriaClinica historia = new HistoriaClinica(
                     rs.getString("NroHistoria"),
-                    GrupoSanguineo.valueOf(rs.getString("GrupoSanguineo")),
+                    GrupoSanguineo.fromCodigo(rs.getInt("GrupoSanguineo")),
                     rs.getString("Antecedentes"),
                     rs.getString("MedicacionActual"),
                     rs.getString("Observaciones"),
@@ -160,8 +180,6 @@ public class PacienteDao implements GenericDao<Paciente>{
             throw new Exception("Error al obtener paciente por DNI: " + e.getMessage(), e);
         }
     }
-
-
 
     @Override
     public List<Paciente> getAll() throws Exception {

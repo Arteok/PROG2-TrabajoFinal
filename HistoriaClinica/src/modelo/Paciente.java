@@ -1,16 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 import java.time.LocalDate;
 
-/**
- *
- * @author Maxi
- */
 public class Paciente extends Base{
+    public static final String RESET = "\u001B[0m";
+    public static final String PURPLE = "\u001B[35m";
+    
     private String nombre;
     private String apellido;
     private String dni;
@@ -70,11 +65,16 @@ public class Paciente extends Base{
         this.historiaClinica = historiaClinica;
     }
 
-
     @Override
     public String toString() {
-        return "Paciente{" + "nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", fechaNacimiento=" + fechaNacimiento +" '}'";
-    }
-    
-    
+                java.time.format.DateTimeFormatter fmt =
+                java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        String fecha = (fechaNacimiento != null)
+                ? fechaNacimiento.format(fmt)
+                : "N/A";
+        
+        return PURPLE+"Paciente"+RESET+"{" + "id = " + getId() +
+                ", nombre = " + nombre + ", apellido = " + apellido + ", dni = " + dni + ", fechaNacimiento = " + fecha +"}";
+    }    
 }
